@@ -17,6 +17,7 @@
             overflow: hidden;
         }
         
+        /* --- ФОН СО СТИКЕРАМИ --- */
         .menu-background {
             position: fixed;
             top: 0;
@@ -25,7 +26,7 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            pointer-events: none; /* Чтобы стикеры не перекрывали клики */
+            pointer-events: none;
         }
         .menu-sticker {
             position: absolute;
@@ -53,7 +54,7 @@
 
         .menu-container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.95); /* Плотный фон, чтобы текст легко читался поверх мемов */
+            background: rgba(255, 255, 255, 0.95);
             padding: 30px 20px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -86,27 +87,32 @@
             background-color: #28a745;
         }
 
-        /* МОБИЛЬНАЯ АДАПТАЦИЯ: стикеры уменьшаются и остаются видны по краям */
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ: оптимальный размер 75px + красивые аккуратные отступы */
         @media (max-width: 768px) {
             .menu-sticker {
-                width: 50px;
-                height: 50px;
-                border: 2px solid white;
-                border-radius: 8px;
-                box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+                width: 75px;
+                height: 75px;
+                border: 3px solid white;
+                border-radius: 10px;
+                box-shadow: 1px 1px 6px rgba(0,0,0,0.2);
             }
-            .sticker-1 { top: 8px; left: 8px; }
-            .sticker-2 { top: 8px; right: 8px; }
-            .sticker-3 { bottom: 8px; left: 8px; }
-            .sticker-4 { bottom: 8px; right: 8px; }
-            .sticker-5 { top: 8px; left: 50%; transform: translateX(-50%); }
-            .sticker-6 { bottom: 8px; left: 50%; transform: translateX(-50%); }
-            .sticker-7 { top: 50%; left: 8px; transform: translateY(-50%); }
-            .sticker-8 { top: 50%; right: 8px; transform: translateY(-50%); }
-            .sticker-9 { top: 22%; left: 10px; }
-            .sticker-10 { top: 22%; right: 10px; }
-            .sticker-11 { bottom: 22%; left: 10px; }
-            .sticker-12 { bottom: 22%; right: 10px; }
+            /* Расставляем стикеры по периметру с небольшими отступами друг от друга */
+            .sticker-1 { top: 10px; left: 10px; }
+            .sticker-2 { top: 10px; right: 10px; }
+            .sticker-3 { bottom: 10px; left: 10px; }
+            .sticker-4 { bottom: 10px; right: 10px; }
+            
+            .sticker-5 { top: 10px; left: 35%; }
+            .sticker-6 { top: 10px; right: 35%; }
+            
+            .sticker-7 { bottom: 10px; left: 35%; }
+            .sticker-8 { bottom: 10px; right: 35%; }
+            
+            .sticker-9 { top: 35%; left: 10px; }
+            .sticker-10 { top: 35%; right: 10px; }
+            
+            .sticker-11 { bottom: 35%; left: 10px; }
+            .sticker-12 { bottom: 35%; right: 10px; }
         }
     </style>
 </head>
