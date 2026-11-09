@@ -55,6 +55,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
+            height: 220px; /* Фиксированная высота для сохранения размеров окна */
+            box-sizing: border-box;
+        }
+        .question-box.no-photo {
+            justify-content: center !important; /* Центрирование названия при выключенном фото */
         }
         .question-box img {
             width: 100%;
@@ -128,7 +133,7 @@
             <span id="scoreTracker">Правильно: 0</span>
         </div>
 
-        <div class="question-box">
+        <div class="question-box" id="questionBox">
             <img id="qImage" src="" alt="Фото позиции">
             <h2 id="qName">Название</h2>
         </div>
@@ -146,14 +151,22 @@
         let currentIndex = 0;
         let score = 0;
         let answered = false;
+        let photoMode = localStorage.getItem('photoMode') !== 'off';
 
         const qImage = document.getElementById('qImage');
         const qName = document.getElementById('qName');
+        const questionBox = document.getElementById('questionBox');
         const optionBoxes = document.querySelectorAll('.option-box');
         const nextBtn = document.getElementById('nextBtn');
         const questionCounter = document.getElementById('questionCounter');
         const scoreTracker = document.getElementById('scoreTracker');
         const testContainer = document.getElementById('testContainer');
+
+        // Применяем настройки режима фото
+        if (!photoMode) {
+            qImage.style.display = 'none';
+            questionBox.classList.add('no-photo');
+        }
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -186,8 +199,10 @@
 
             const currentQ = questions[currentIndex];
 
-            qImage.src = `foto/${currentQ.id}.jpg`;
-            qImage.onerror = () => { qImage.src = 'https://via.placeholder.com/250?text=No+Photo'; };
+            if (photoMode) {
+                qImage.src = `foto/${currentQ.id}.jpg`;
+                qImage.onerror = () => { qImage.src = 'https://via.placeholder.com/250?text=No+Photo'; };
+            }
             qName.textContent = currentQ.name;
 
             const incorrectOptions = questions
@@ -213,7 +228,6 @@
         optionBoxes.forEach(box => {
             box.addEventListener('click', () => {
                 if (!answered) {
-                    // Первый клик: выбираем и проверяем ответ
                     answered = true;
                     const isCorrect = box.dataset.correct === 'true';
 
@@ -232,7 +246,6 @@
                     scoreTracker.textContent = `Правильно: ${score}`;
                     nextBtn.style.display = 'block';
                 } else {
-                    // Повторный клик по любому варианту: переходим к следующему вопросу
                     currentIndex++;
                     showQuestion();
                 }

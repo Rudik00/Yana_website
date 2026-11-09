@@ -94,6 +94,15 @@
         .menu-btn.test:hover {
             background-color: #218838;
         }
+        .menu-btn.photo-toggle {
+            background-color: #6c757d;
+            box-shadow: 0 4px 10px rgba(108,117,125,0.3);
+            font-size: 16px;
+            padding: 12px;
+        }
+        .menu-btn.photo-toggle:hover {
+            background-color: #5a6268;
+        }
 
         /* Адаптация сетки для мобильных телефонов */
         @media (max-width: 768px) {
@@ -135,8 +144,29 @@
     <!-- Основное меню -->
     <div class="menu-container">
         <h1>📚 Меню обучения</h1>
-        <a href="cards.html" class="menu-btn">1 — Карточки</a>
-        <a href="test.html" class="menu-btn test">2 — Тест</a>
+        <a href="cards.html" class="menu-btn">Карточки</a>
+        <a href="test.html" class="menu-btn test">Тест</a>
+        <button class="menu-btn photo-toggle" id="photoToggleBtn">Фото: ON</button>
     </div>
+
+    <script>
+        // Инициализация режима фото для каждого пользователя индивидуально через localStorage
+        let photoMode = localStorage.getItem('photoMode') !== 'off';
+
+        const photoToggleBtn = document.getElementById('photoToggleBtn');
+
+        function updateButtonText() {
+            photoToggleBtn.textContent = photoMode ? 'Фото: ON' : 'Фото: OFF';
+            photoToggleBtn.style.backgroundColor = photoMode ? '#6c757d' : '#dc3545';
+        }
+
+        photoToggleBtn.addEventListener('click', () => {
+            photoMode = !photoMode;
+            localStorage.setItem('photoMode', photoMode ? 'on' : 'off');
+            updateButtonText();
+        });
+
+        updateButtonText();
+    </script>
 </body>
 </html>
