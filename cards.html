@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Карточки — Обучение</title>
     <style>
         body {
@@ -12,39 +12,46 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            justify-content: space-between;
+            height: 100vh;
+            height: 100dvh;
+            padding: 10px 0 20px 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 15px;
+            box-sizing: border-box;
         }
         .back-menu {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 10px 15px;
+            padding: 8px 12px;
             background-color: #6c757d;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            font-size: 14px;
             font-weight: bold;
-            transition: background 0.3s;
-        }
-        .back-menu:hover {
-            background-color: #5a6268;
         }
         .card-container {
             perspective: 1000px;
-            width: 320px;
-            height: 450px;
+            width: 90vw;
+            max-width: 320px;
+            height: 52vh;
+            max-height: 400px;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin: auto 0;
         }
         .card {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: transform 0.5s;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
         .card.flipped {
             transform: rotateY(180deg);
@@ -59,8 +66,8 @@
             align-items: center;
             justify-content: center;
             background: white;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 15px;
             box-sizing: border-box;
             text-align: center;
         }
@@ -68,27 +75,31 @@
             transform: rotateY(180deg);
             background-color: #fff3cd;
             color: #856404;
-            font-size: 18px;
-            line-height: 1.5;
+            font-size: 16px;
+            line-height: 1.4;
+            overflow-y: auto;
         }
         .card-face img {
             width: 100%;
-            height: 250px;
+            height: 60%;
             object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
         .card-face h2 {
-            font-size: 20px;
+            font-size: 18px;
             color: #333;
-            margin: 0;
+            margin: 5px 0 0 0;
         }
         .controls {
             display: flex;
-            gap: 15px;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
         }
         .btn {
-            padding: 10px 20px;
+            padding: 10px 30px;
             font-size: 16px;
             font-weight: bold;
             border: none;
@@ -96,20 +107,17 @@
             cursor: pointer;
             background-color: #007bff;
             color: white;
-            transition: background 0.3s;
-        }
-        .btn:hover {
-            background-color: #0056b3;
         }
         .counter {
-            margin-top: 15px;
             color: #666;
-            font-size: 14px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-menu">← В меню</a>
+    <div class="top-bar">
+        <a href="index.html" class="back-menu">← В меню</a>
+    </div>
 
     <div class="card-container" id="cardContainer">
         <div class="card" id="card">
@@ -125,8 +133,8 @@
 
     <div class="controls">
         <button class="btn" id="backBtn">Назад</button>
+        <div class="counter" id="counter">Карточка 0 из 0</div>
     </div>
-    <div class="counter" id="counter">Карточка 0 из 0</div>
 
     <script>
         let cardsData = [];
@@ -141,7 +149,6 @@
         const backBtn = document.getElementById('backBtn');
         const counter = document.getElementById('counter');
 
-        // Перемешивание массива (Fisher-Yates) по id
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -175,14 +182,11 @@
             counter.textContent = `Карточка ${currentIndex + 1} из ${cardsData.length}`;
         }
 
-        // Клик по карточке
         cardContainer.addEventListener('click', () => {
             if (!isFlipped) {
-                // 1-й клик: переворот на состав
                 isFlipped = true;
                 cardElement.classList.add('flipped');
             } else {
-                // 2-й клик: переход к следующей карточке
                 if (currentIndex < cardsData.length - 1) {
                     currentIndex++;
                     showCard();
@@ -194,15 +198,12 @@
             }
         });
 
-        // Кнопка назад
         backBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (isFlipped) {
-                // Перевернуть обратно на лицо
                 isFlipped = false;
                 cardElement.classList.remove('flipped');
             } else {
-                // Вернуть прошлую карточку
                 if (currentIndex > 0) {
                     currentIndex--;
                     showCard();
