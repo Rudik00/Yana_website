@@ -38,9 +38,9 @@
         .card-container {
             perspective: 1000px;
             width: 90vw;
-            max-width: 320px;
-            height: 52vh;
-            max-height: 400px;
+            max-width: 340px;
+            height: 55vh;
+            max-height: 430px;
             cursor: pointer;
             margin: auto 0;
         }
@@ -50,7 +50,7 @@
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.5s;
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
         .card.flipped {
@@ -64,10 +64,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between; /* Распределяем элементы по высоте симметрично */
             background: white;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 14px;
+            padding: 20px 16px; /* Симметричные отступы по краям */
             box-sizing: border-box;
             text-align: center;
         }
@@ -75,21 +75,22 @@
             transform: rotateY(180deg);
             background-color: #fff3cd;
             color: #856404;
-            font-size: 16px;
-            line-height: 1.4;
+            font-size: 17px;
+            line-height: 1.5;
+            justify-content: center; /* Текст состава по центру */
             overflow-y: auto;
         }
         .card-face img {
             width: 100%;
-            height: 60%;
-            object-fit: cover;
+            height: 72%; /* Фото занимает верхнюю часть */
+            object-fit: contain; /* Фото НЕ обрезается, а масштабируется целиком */
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-top: 5px;
         }
         .card-face h2 {
             font-size: 18px;
             color: #333;
-            margin: 5px 0 0 0;
+            margin: 10px 0 5px 0; /* Название смещено ниже, ближе к нижней границе */
         }
         .controls {
             display: flex;
