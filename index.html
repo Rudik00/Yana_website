@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главное меню — Обучение</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Чтобы стикеры не создавали прокрутку */
+        }
+        
+        /* --- BACKROUND MEME STICKERS --- */
+        .menu-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Фон находится ЗА меню */
+            overflow: hidden;
+        }
+        .menu-sticker {
+            position: absolute;
+            width: 130px; /* Размер стикера */
+            height: 130px;
+            object-fit: cover;
+            border: 6px solid white; /* Эффект стикера */
+            border-radius: 20px;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.25);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .menu-sticker:hover {
+            transform: scale(1.1) rotate(5deg); /* Эффект наведения */
+        }
+
+        /* Позиционирование 12 стикеров вокруг центрального меню */
+        /* Углы */
+        .sticker-1 { top: 30px; left: 30px; } /* TL */
+        .sticker-2 { top: 30px; right: 30px; } /* TR */
+        .sticker-3 { bottom: 30px; left: 30px; } /* BL */
+        .sticker-4 { bottom: 30px; right: 30px; } /* BR */
+
+        /* Стороны */
+        .sticker-5 { top: 30px; left: 50%; transform: translateX(-50%); } /* T-Center */
+        .sticker-6 { bottom: 30px; left: 50%; transform: translateX(-50%); } /* B-Center */
+        .sticker-7 { top: 50%; left: 30px; transform: translateY(-50%); } /* L-Center */
+        .sticker-8 { top: 50%; right: 30px; transform: translateY(-50%); } /* R-Center */
+
+        /* Плотность (немного вразброс) */
+        .sticker-9 { top: 20%; left: 160px; } /* TL side */
+        .sticker-10 { top: 20%; right: 160px; } /* TR side */
+        .sticker-11 { bottom: 20%; left: 160px; } /* BL side */
+        .sticker-12 { bottom: 20%; right: 160px; } /* BR side */
+        /* --- --------------------------- --- */
+
+        .menu-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9); /* Сделал фон чуть прозрачным */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+            position: relative; /* Чтобы меню было поверх фона */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+            box-sizing: border-box;
+        }
+        .menu-btn:hover {
+            background-color: #0056b3;
+        }
+        .menu-btn.test {
+            background-color: #28a745;
+        }
+        .menu-btn.test:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- НОВЫЙ БЛОК: Фон со стикерами -->
+    <div class="menu-background">
+        <img src="mem/1.1.jpeg" class="menu-sticker sticker-1" alt="Мем 1">
+        <img src="mem/1.2.jpeg" class="menu-sticker sticker-2" alt="Мем 2">
+        <img src="mem/1.3.jpeg" class="menu-sticker sticker-3" alt="Мем 3">
+        <img src="mem/1.4.jpeg" class="menu-sticker sticker-4" alt="Мем 4">
+        <img src="mem/1.5.jpeg" class="menu-sticker sticker-5" alt="Мем 5">
+        <img src="mem/1.6.jpeg" class="menu-sticker sticker-6" alt="Мем 6">
+        <img src="mem/1.7.jpeg" class="menu-sticker sticker-7" alt="Мем 7">
+        <img src="mem/1.8.jpeg" class="menu-sticker sticker-8" alt="Мем 8">
+        <img src="mem/1.9.jpeg" class="menu-sticker sticker-9" alt="Мем 9">
+        <img src="mem/1.10.jpeg" class="menu-sticker sticker-10" alt="Мем 10">
+        <img src="mem/1.11.jpeg" class="menu-sticker sticker-11" alt="Мем 11">
+        <img src="mem/1.12.jpeg" class="menu-sticker sticker-12" alt="Мем 12">
+    </div>
+
+    <!-- Основное меню -->
+    <div class="menu-container">
+        <h1>📚 Меню обучения</h1>
+        <a href="cards.html" class="menu-btn">1 — Карточки</a>
+        <a href="test.html" class="menu-btn test">2 — Тест</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест — Обучение</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .back-menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .back-menu:hover {
+            background-color: #5a6268;
+        }
+        .test-container {
+            max-width: 600px;
+            width: 100%;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .question-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .question-box img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .question-box h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+        }
+        .option-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .option-box:hover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+        .option-box.correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
+        }
+        .option-box.incorrect {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
+        }
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .next-btn {
+            margin-top: 10px;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+        .next-btn:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-menu">← В меню</a>
+
+    <div class="test-container" id="testContainer">
+        <div class="info-bar">
+            <span id="questionCounter">Вопрос 1 из 0</span>
+            <span id="scoreTracker">Правильно: 0</span>
+        </div>
+
+        <!-- Прямоугольник 1: Вопрос (Фото + Название) -->
+        <div class="question-box">
+            <img id="qImage" src="" alt="Фото позиции">
+            <h2 id="qName">Название</h2>
+        </div>
+
+        <!-- Прямоугольники 2-5: Варианты ответов -->
+        <div class="option-box" data-index="0">Вариант 1</div>
+        <div class="option-box" data-index="1">Вариант 2</div>
+        <div class="option-box" data-index="2">Вариант 3</div>
+        <div class="option-box" data-index="3">Вариант 4</div>
+
+        <button class="next-btn" id="nextBtn">Следующий вопрос</button>
+    </div>
+
+    <script>
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const qImage = document.getElementById('qImage');
+        const qName = document.getElementById('qName');
+        const optionBoxes = document.querySelectorAll('.option-box');
+        const nextBtn = document.getElementById('nextBtn');
+        const questionCounter = document.getElementById('questionCounter');
+        const scoreTracker = document.getElementById('scoreTracker');
+        const testContainer = document.getElementById('testContainer');
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        async function loadTest() {
+            try {
+                const response = await fetch('bd.json');
+                const data = await response.json();
+                // Перемешиваем вопросы по id
+                questions = shuffle([...data]);
+                showQuestion();
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                qName.textContent = 'Ошибка загрузки bd.json';
+            }
+        }
+
+        function showQuestion() {
+            if (currentIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            answered = false;
+            nextBtn.style.display = 'none';
+
+            const currentQ = questions[currentIndex];
+
+            qImage.src = `foto/${currentQ.id}.jpg`;
+            qImage.onerror = () => { qImage.src = 'https://via.placeholder.com/250?text=No+Photo'; };
+            qName.textContent = currentQ.name;
+
+            // Берем 3 рандомных неверных ответа из других id
+            const incorrectOptions = questions
+                .filter(item => item.id !== currentQ.id)
+                .map(item => item.compound);
+            
+            shuffle(incorrectOptions);
+            const wrongChoices = incorrectOptions.slice(0, 3);
+
+            // Формируем 4 варианта и перемешиваем их
+            let options = [currentQ.compound, ...wrongChoices];
+            shuffle(options);
+
+            optionBoxes.forEach((box, idx) => {
+                box.textContent = options[idx];
+                box.classList.remove('correct', 'incorrect');
+                box.style.pointerEvents = 'auto';
+                box.dataset.correct = (options[idx] === currentQ.compound) ? 'true' : 'false';
+            });
+
+            questionCounter.textContent = `Вопрос ${currentIndex + 1} из ${questions.length}`;
+            scoreTracker.textContent = `Правильно: ${score}`;
+        }
+
+        optionBoxes.forEach(box => {
+            box.addEventListener('click', () => {
+                if (answered) return;
+                answered = true;
+
+                const isCorrect = box.dataset.correct === 'true';
+
+                if (isCorrect) {
+                    box.classList.add('correct');
+                    score++;
+                } else {
+                    box.classList.add('incorrect');
+                    // Подсвечиваем правильный вариант зеленым
+                    optionBoxes.forEach(b => {
+                        if (b.dataset.correct === 'true') {
+                            b.classList.add('correct');
+                        }
+                    });
+                }
+
+                scoreTracker.textContent = `Правильно: ${score}`;
+                optionBoxes.forEach(b => b.style.pointerEvents = 'none');
+                nextBtn.style.display = 'block';
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex++;
+            showQuestion();
+        });
+
+        function showResults() {
+            testContainer.innerHTML = `
+                <div class="results">
+                    <h2>🎉 Тест завершен!</h2>
+                    <p style="font-size: 18px; margin: 20px 0;">Ваш результат: <b>${score}</b> из <b>${questions.length}</b></p>
+                    <a href="index.html" style="display: inline-block; padding: 12px 25px; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Вернуться в меню</a>
+                </div>
+            `;
+        }
+
+        loadTest();
+    </script>
+</body>
+</html>
