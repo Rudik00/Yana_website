@@ -71,7 +71,6 @@
             box-sizing: border-box;
             text-align: center;
         }
-        /* Класс для режима без фото: элементы центрируются внутри неизменного окна */
         .card-face.no-photo {
             justify-content: center !important;
         }
@@ -156,7 +155,6 @@
         const backBtn = document.getElementById('backBtn');
         const counter = document.getElementById('counter');
 
-        // Применяем режим отображения фото сразу
         if (!photoMode) {
             cardImage.style.display = 'none';
             cardFrontFace.classList.add('no-photo');
@@ -192,7 +190,8 @@
             }
             
             cardName.textContent = item.name;
-            cardCompound.textContent = item.compound;
+            // Превращаем массив compound в красивую строчку через запятую
+            cardCompound.textContent = Array.isArray(item.compound) ? item.compound.join(', ') : item.compound;
             
             isFlipped = false;
             cardElement.classList.remove('flipped');

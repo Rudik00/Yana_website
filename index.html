@@ -18,70 +18,59 @@
             position: relative;
         }
         
-        /* --- ФОНОВЫЙ КОЛЛАЖ (CSS Grid на весь экран) --- */
+        /* Единый фон на всю страницу, растягивающийся по масштабу */
         .menu-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: grid;
-            /* 4 колонки и 4 строки покрывают весь экран */
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 10px;
-            padding: 10px;
-            box-sizing: border-box;
+            object-fit: cover;
             z-index: -1;
             pointer-events: none;
+            opacity: 0.85; /* Легкое затемнение для читаемости меню */
         }
 
-        .menu-sticker {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            opacity: 0.85; /* Легкое затемнение, чтобы меню читалось еще лучше */
+        /* По умолчанию (для ноутбуков и широких экранов) показываем horizontal.jpg из папки mem */
+        .bg-vertical {
+            display: none;
+        }
+        .bg-horizontal {
+            display: block;
         }
 
-        /* Оставляем центр пустым (там будет меню), скрывая центральные элементы сетки под меню */
-        .center-plug {
-            visibility: hidden;
-        }
-
-        /* --- ЦЕНТРАЛЬНОЕ МЕНЮ --- */
+        /* Центральная панель уменьшена на 30% */
         .menu-container {
             text-align: center;
             background: rgba(255, 255, 255, 0.96);
-            padding: 35px 25px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            max-width: 340px;
-            width: 85%;
+            padding: 24px 18px;
+            border-radius: 11px;
+            box-shadow: 0 6px 21px rgba(0,0,0,0.2);
+            max-width: 238px;
+            width: 60%;
             z-index: 1;
             border: 2px solid rgba(255,255,255,0.8);
         }
         h1 {
             color: #333;
-            margin-bottom: 25px;
-            font-size: 22px;
+            margin-bottom: 18px;
+            font-size: 15px;
         }
         .menu-btn {
             display: block;
             width: 100%;
-            padding: 14px;
-            margin: 12px 0;
-            font-size: 18px;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 13px;
             font-weight: bold;
             color: white;
             background-color: #007bff;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             text-decoration: none;
             box-sizing: border-box;
-            box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+            box-shadow: 0 3px 7px rgba(0,123,255,0.3);
             transition: background 0.2s;
         }
         .menu-btn:hover {
@@ -89,84 +78,46 @@
         }
         .menu-btn.test {
             background-color: #28a745;
-            box-shadow: 0 4px 10px rgba(40,167,69,0.3);
+            box-shadow: 0 3px 7px rgba(40,167,69,0.3);
         }
         .menu-btn.test:hover {
             background-color: #218838;
         }
-        .menu-btn.photo-toggle {
+        .menu-btn.settings {
             background-color: #6c757d;
-            box-shadow: 0 4px 10px rgba(108,117,125,0.3);
-            font-size: 16px;
-            padding: 12px;
+            box-shadow: 0 3px 7px rgba(108,117,125,0.3);
+            font-size: 11px;
+            padding: 8px;
         }
-        .menu-btn.photo-toggle:hover {
+        .menu-btn.settings:hover {
             background-color: #5a6268;
         }
 
-        /* Адаптация сетки для мобильных телефонов */
+        /* При переходе на узкие экраны (телефоны) меняем фон на vertical.jpg из папки mem */
         @media (max-width: 768px) {
-            .menu-background {
-                gap: 6px;
-                padding: 6px;
+            .bg-horizontal {
+                display: none;
+            }
+            .bg-vertical {
+                display: block;
             }
             .menu-container {
-                padding: 25px 20px;
-                width: 82%;
+                padding: 18px 14px;
+                width: 57%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Фоновый коллаж из 16 ячеек (12 фото + 4 пустых по центру для меню) -->
-    <div class="menu-background">
-        <img src="mem/1.1.jpeg" class="menu-sticker" alt="">
-        <img src="mem/1.2.jpeg" class="menu-sticker" alt="">
-        <img src="mem/1.3.jpeg" class="menu-sticker" alt="">
-        <img src="mem/1.4.jpeg" class="menu-sticker" alt="">
-        
-        <img src="mem/1.5.jpeg" class="menu-sticker" alt="">
-        <div class="center-plug"></div>
-        <div class="center-plug"></div>
-        <img src="mem/1.6.jpeg" class="menu-sticker" alt="">
-        
-        <img src="mem/1.7.jpeg" class="menu-sticker" alt="">
-        <div class="center-plug"></div>
-        <div class="center-plug"></div>
-        <img src="mem/1.8.jpeg" class="menu-sticker" alt="">
-        
-        <img src="mem/1.9.jpeg" class="menu-sticker" alt="">
-        <img src="mem/1.10.jpeg" class="menu-sticker" alt="">
-        <img src="mem/1.11.jpeg" class="menu-sticker" alt="">
-        <img src="mem/1.12.jpeg" class="menu-sticker" alt="">
-    </div>
+    <!-- Пути обновлены: картинки теперь берутся из папки mem -->
+    <img src="mem/horizontal.jpg" class="menu-background bg-horizontal" alt="">
+    <img src="mem/vertical.jpg" class="menu-background bg-vertical" alt="">
 
-    <!-- Основное меню -->
     <div class="menu-container">
         <h1>📚 Меню обучения</h1>
         <a href="cards.html" class="menu-btn">Карточки</a>
         <a href="test.html" class="menu-btn test">Тест</a>
-        <button class="menu-btn photo-toggle" id="photoToggleBtn">Фото: ON</button>
+        <a href="settings.html" class="menu-btn settings">⚙️ Настройки</a>
     </div>
-
-    <script>
-        // Инициализация режима фото для каждого пользователя индивидуально через localStorage
-        let photoMode = localStorage.getItem('photoMode') !== 'off';
-
-        const photoToggleBtn = document.getElementById('photoToggleBtn');
-
-        function updateButtonText() {
-            photoToggleBtn.textContent = photoMode ? 'Фото: ON' : 'Фото: OFF';
-            photoToggleBtn.style.backgroundColor = photoMode ? '#6c757d' : '#dc3545';
-        }
-
-        photoToggleBtn.addEventListener('click', () => {
-            photoMode = !photoMode;
-            localStorage.setItem('photoMode', photoMode ? 'on' : 'off');
-            updateButtonText();
-        });
-
-        updateButtonText();
-    </script>
 </body>
 </html>

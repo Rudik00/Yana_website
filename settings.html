@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки — Обучение</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .settings-container {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 35px 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            max-width: 340px;
+            width: 85%;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+            text-align: center;
+        }
+        .setting-item {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .setting-item label {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        /* Стили кастомного ползунка (Switch) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #007bff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        select {
+            padding: 8px 12px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #6c757d;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            box-sizing: border-box;
+            transition: background 0.2s;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <h1>⚙️ Настройки</h1>
+        
+        <div class="setting-item">
+            <label for="photoToggle">Фотографии:</label>
+            <label class="switch">
+                <input type="checkbox" id="photoToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item">
+            <label for="difficultySelect">Сложность теста:</label>
+            <select id="difficultySelect">
+                <option value="easy">Простой</option>
+                <option value="hard">Сложный</option>
+            </select>
+        </div>
+
+        <a href="index.html" class="back-btn">← В меню</a>
+    </div>
+
+    <script>
+        const photoToggle = document.getElementById('photoToggle');
+        const difficultySelect = document.getElementById('difficultySelect');
+
+        // Инициализация значений из localStorage
+        let photoMode = localStorage.getItem('photoMode') !== 'off';
+        let testDifficulty = localStorage.getItem('testDifficulty') || 'easy';
+
+        photoToggle.checked = photoMode;
+        difficultySelect.value = testDifficulty;
+
+        // Обработчики изменений
+        photoToggle.addEventListener('change', () => {
+            localStorage.setItem('photoMode', photoToggle.checked ? 'on' : 'off');
+        });
+
+        difficultySelect.addEventListener('change', () => {
+            localStorage.setItem('testDifficulty', difficultySelect.value);
+        });
+    </script>
+</body>
+</html>

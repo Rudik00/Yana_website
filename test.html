@@ -55,11 +55,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            height: 220px; /* Фиксированная высота для сохранения размеров окна */
+            height: 220px;
             box-sizing: border-box;
         }
         .question-box.no-photo {
-            justify-content: center !important; /* Центрирование названия при выключенном фото */
+            justify-content: center !important;
         }
         .question-box img {
             width: 100%;
@@ -151,7 +151,9 @@
         let currentIndex = 0;
         let score = 0;
         let answered = false;
+        let canAdvance = false;
         let photoMode = localStorage.getItem('photoMode') !== 'off';
+        let testDifficulty = localStorage.getItem('testDifficulty') || 'easy';
 
         const qImage = document.getElementById('qImage');
         const qName = document.getElementById('qName');
@@ -162,7 +164,6 @@
         const scoreTracker = document.getElementById('scoreTracker');
         const testContainer = document.getElementById('testContainer');
 
-        // Применяем настройки режима фото
         if (!photoMode) {
             qImage.style.display = 'none';
             questionBox.classList.add('no-photo');
@@ -195,6 +196,7 @@
             }
 
             answered = false;
+            canAdvance = false;
             nextBtn.style.display = 'none';
 
             const currentQ = questions[currentIndex];
@@ -205,29 +207,56 @@
             }
             qName.textContent = currentQ.name;
 
-            const incorrectOptions = questions
-                .filter(item => item.id !== currentQ.id)
-                .map(item => item.compound);
-            
-            shuffle(incorrectOptions);
-            const wrongChoices = incorrectOptions.slice(0, 3);
+            const correctCompoundStr = Array.isArray(currentQ.compound) 
+                ? currentQ.compound.join(', ') 
+                : currentQ.compound;
 
-            let options = [currentQ.compound, ...wrongChoices];
-            shuffle(options);
+            let wrongChoicesStrs = [];
+
+            if (testDifficulty === 'hard' && currentQ['incorrect answers'] && currentQ['incorrect answers'].length > 0) {
+                let shuffledIncorrects = shuffle([...currentQ['incorrect answers']]);
+                wrongChoicesStrs = shuffledIncorrects.map(arr => Array.isArray(arr) ? arr.join(', ') : arr);
+            } else {
+                wrongChoicesStrs = questions
+                    .filter(item => item.id !== currentQ.id)
+                    .map(item => Array.isArray(item.compound) ? item.compound.join(', ') : item.compound);
+                shuffle(wrongChoicesStrs);
+            }
+
+            // Фильтрация: исключаем дубликаты и совпадения с правильным ответом
+            let uniqueOptions = [correctCompoundStr];
+            for (let choice of wrongChoicesStrs) {
+                if (choice !== correctCompoundStr && !uniqueOptions.includes(choice)) {
+                    uniqueOptions.push(choice);
+                }
+                if (uniqueOptions.length >= 4) break;
+            }
+
+            // Перемешиваем итоговые 4 варианта, чтобы верный ответ был в случайном месте
+            let options = shuffle(uniqueOptions);
 
             optionBoxes.forEach((box, idx) => {
                 box.textContent = options[idx];
                 box.classList.remove('correct', 'incorrect');
-                box.dataset.correct = (options[idx] === currentQ.compound) ? 'true' : 'false';
+                box.dataset.correct = (options[idx] === correctCompoundStr) ? 'true' : 'false';
             });
 
             questionCounter.textContent = `Вопрос ${currentIndex + 1} из ${questions.length}`;
             scoreTracker.textContent = `Правильно: ${score}`;
         }
 
+        function goToNextQuestion() {
+            if (canAdvance) {
+                currentIndex++;
+                showQuestion();
+            }
+        }
+
         optionBoxes.forEach(box => {
-            box.addEventListener('click', () => {
+            box.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if (!answered) {
+                    // Ступень 1: Показываем результат (где верный, куда нажали)
                     answered = true;
                     const isCorrect = box.dataset.correct === 'true';
 
@@ -245,16 +274,28 @@
 
                     scoreTracker.textContent = `Правильно: ${score}`;
                     nextBtn.style.display = 'block';
-                } else {
-                    currentIndex++;
-                    showQuestion();
+
+                    setTimeout(() => {
+                        canAdvance = true;
+                    }, 50);
+                } else if (canAdvance) {
+                    // Ступень 2: Переход по повторному клику на вариант
+                    goToNextQuestion();
                 }
             });
         });
 
-        nextBtn.addEventListener('click', () => {
-            currentIndex++;
-            showQuestion();
+        // Ступень 2: Переход по клику в любую часть экрана после ответа
+        document.addEventListener('click', (e) => {
+            if (canAdvance && !e.target.closest('.back-menu')) {
+                goToNextQuestion();
+            }
+        });
+
+        // Ступень 2: Переход по клику на кнопку «Следующий вопрос»
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToNextQuestion();
         });
 
         function showResults() {
